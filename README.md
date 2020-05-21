@@ -1,6 +1,6 @@
 # Google Student Training in Engineering Program
 
-This repo contains John Dallard's portfolio and STEP projects for his internship.
+This repo contains the projects I (John Dallard) will work on for the first half of my Google STEP internship
 This work is based on the [Google Software Product Sprint](https://g.co/softwareproductsprint) program.
 
 To get started:
