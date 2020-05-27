@@ -1,12 +1,22 @@
-header {
-    text-align: center;
-}
-
-#home-body {
+.content-body {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #bebebe;
+  color: white;
+  text-align: center;
+}
+
+header {
+    text-align: center;
 }
 
 img {
@@ -36,4 +46,9 @@ img {
 
 .topnav a.active {
   border-bottom: 3px solid red;
+}
+
+video {
+  width: 500px;
+  height: 500px;
 }
