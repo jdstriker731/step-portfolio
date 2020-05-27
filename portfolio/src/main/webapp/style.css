@@ -1,9 +1,54 @@
-#content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
+.content-body {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
 
-#greeting-container {
-  margin-top: 20px;
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #bebebe;
+  color: white;
+  text-align: center;
+}
+
+header {
+    text-align: center;
+}
+
+img {
+    height: 500px;
+    width: auto;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  border-bottom: 3px solid transparent;
+}
+
+.topnav a:hover {
+  border-bottom: 3px solid red;
+}
+
+.topnav a.active {
+  border-bottom: 3px solid red;
+}
+
+video {
+  width: 500px;
+  height: 500px;
 }
