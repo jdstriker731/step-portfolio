@@ -5,6 +5,10 @@
   width: 50%;
 }
 
+#fact-div {
+  margin: 100px;    
+}
+
 footer {
   position: fixed;
   left: 0;
