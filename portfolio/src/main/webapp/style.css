@@ -28,6 +28,10 @@ img {
   width: auto;
 }
 
+#london-photos {
+  margin: 50px;    
+}
+
 .topnav {
   overflow: hidden;
   background-color: #f1f1f1;
