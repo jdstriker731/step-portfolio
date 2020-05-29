@@ -23,13 +23,30 @@ header {
   text-align: center;
 }
 
+html {
+  background: url("images/blue_background.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 img {
   height: 500px;
   width: auto;
+  display: inline-block;
 }
 
-#london-photos {
-  margin: 50px;    
+.london-photos {
+  width: 80%;
+  min-width: 500px;
+  max-width: 1920px;
+  margin: auto;
+  text-align: center;  
+}
+ 
+td {
+  border: 1px solid Black;
 }
 
 .topnav {
@@ -49,14 +66,22 @@ img {
 }
 
 .topnav a:hover {
-  border-bottom: 3px solid red;
+  border-bottom: 3px solid rgb(0, 110, 255);
 }
 
 .topnav a.active {
-  border-bottom: 3px solid red;
+  border-bottom: 3px solid rgb(0, 110, 225);
 }
 
 video {
   width: 500px;
-  height: 500px;
+  height: 300px;
+}
+
+.yale-photos {
+  width: 80%;
+  min-width: 500px;
+  max-width: 1920px;
+  margin: auto;
+  text-align: center; 
 }
