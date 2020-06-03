@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const quoteContainer = document.getElementById('servlet-content');
+
 const randomFactGenerator = () => {
     const facts = [
       'I used to ride dirtbikes up until 10th grade',
@@ -59,6 +61,5 @@ const handleResponse = response => {
 const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
-  const quoteContainer = document.getElementById('servlet-content');
   quoteContainer.innerText = content;
 };
