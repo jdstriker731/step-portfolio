@@ -41,7 +41,6 @@
         <configuration>
           <!-- TODO: set project ID. -->
           <deploy.projectId>johndallard-step-2020</deploy.projectId>
-          <deploy.version>1</deploy.version>
         </configuration>
       </plugin>
       <!-- New plugin necessary to deploy because old plugin is deprecated. 

@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const quoteContainer = document.getElementById('servlet-content');
+const factContainer = document.getElementById('servlet-content');
+
 const randomFactGenerator = () => {
     const facts = [
       'I used to ride dirtbikes up until 10th grade',
@@ -30,15 +33,12 @@ const randomFactGenerator = () => {
 };
 
 /**
- * Fetches a the content from the server and adds it to the DOM.
+ * Fetches content from the server and adds it to the DOM.
  */
-const getServletContent = () => {
+const fetchContentAndAddToDom = () => {
     console.log('Fetching the content from the server.');
 
-    // The fetch() function returns a Promise because the request is asynchronous.
     const responsePromise = fetch('/data');
-
-    // When the request is complete, pass the response into handleResponse().
     responsePromise.then(handleResponse);
 };
 
@@ -58,15 +58,17 @@ const handleResponse = response => {
   textPromise.then(addContentToDOM);
 };
 
-/** Adds a random quote to the DOM. */
+/** Prints a message to the DOM. */
 const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
-  const quoteContainer = document.getElementById('servlet-content');
   quoteContainer.innerText = content;
-}; 
+};
 
-const getJSONContent = () => {
+/** 
+ * Prints a random message to the DOM using JSON sent from DataServlet.java.
+ */
+const fetchMessageUsingJSON = () => {
   fetch('/data').then(response => response.json()).then( messagesObj => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
@@ -76,8 +78,7 @@ const getJSONContent = () => {
     const messagesSize = messagesObj.messages.length;
     const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
 
-    // Add message to the page.
-    const factContainer = document.getElementById('servlet-content');
+    // Add message to the page
     factContainer.innerText = message;
   });
 };
