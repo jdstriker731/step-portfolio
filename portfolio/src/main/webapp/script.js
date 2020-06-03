@@ -55,7 +55,7 @@ const handleResponse = response => {
   textPromise.then(addContentToDOM);
 };
 
-/** Prints a message to the DOM */
+/** Prints a message to the DOM. */
 const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
