@@ -28,3 +28,93 @@ const randomFactGenerator = () => {
     const factContainer = document.getElementById('fact-container');
     factContainer.innerText = randomFact;
 };
+
+/**
+ * Fetches a the content from the server and adds it to the DOM.
+ */
+const getServletContent = () => {
+    console.log('Fetching the content from the server.');
+
+    // The fetch() function returns a Promise because the request is asynchronous.
+    const responsePromise = fetch('/data');
+
+    // When the request is complete, pass the response into handleResponse().
+    responsePromise.then(handleResponse);
+};
+
+/**
+ * Handles response by converting it to text and passing the result to
+ * addQuoteToDom().
+ */
+const handleResponse = response => {
+  console.log('Handling the response.');
+
+  // response.text() returns a Promise, because the response is a stream of
+  // content and not a simple variable.
+  const textPromise = response.text();
+
+  // When the response is converted to text, pass the result into the
+  // addQuoteToDom() function.
+  textPromise.then(addContentToDOM);
+};
+
+/** Adds a random quote to the DOM. */
+const addContentToDOM = content => {
+  console.log('Adding content to dom: ' + content);
+
+  const quoteContainer = document.getElementById('servlet-content');
+  quoteContainer.innerText = content;
+}; 
+
+const getJSONContent = () => {
+  fetch('/data').then(response => response.json()).then( messagesObj => {
+    // messagesObj is an object, not a string, so we have to
+    // reference its fields to create HTML content
+    
+    // Get random message from the the "messages" field
+    // of messagesObj
+    const messagesSize = messagesObj.messages.length;
+    const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
+
+    // Add message to the page.
+    const factContainer = document.getElementById('servlet-content');
+    factContainer.innerText = message;
+  });
+};
+
+const showUserComments = () => {
+  fetch('/data').then(response => response.json()).then( commentsObj => {
+    // messagesObj is an object, not a string, so we have to
+    // reference its fields to create HTML content
+    
+    const commentsSize = commentsObj.comments.length;
+    const userComments = commentsObj.comments;
+
+    // If there are no comments
+    if (commentsSize === 0)
+    {
+      return;
+    } else {
+      // Build the comments setion with all of the user comments, one after the other
+      const commentsSection = document.getElementById('comments-section');
+      for (let i = 0; i < commentsSize; i++)
+      {
+        commentsSection.appendChild(createCommentElement(userComments[i]));
+        commentsSection.appendChild(createHrElement());
+      }
+    }
+  });
+};
+
+/** Creates an <h4> element containing text. */
+const createCommentElement = text => {
+  const commentElement = document.createElement('h4');
+  commentElement.innerText = text;
+  return commentElement;
+};
+
+/** Creates an <hr> element to separate comments */
+const createHrElement = () => {
+  const hrElement = document.createElement('hr');
+  return hrElement;
+};
