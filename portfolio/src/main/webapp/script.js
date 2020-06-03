@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const quoteContainer = document.getElementById('servlet-content');
+
 const randomFactGenerator = () => {
     const facts = [
       'I used to ride dirtbikes up until 10th grade',
@@ -27,4 +29,37 @@ const randomFactGenerator = () => {
     // Add it to the page.
     const factContainer = document.getElementById('fact-container');
     factContainer.innerText = randomFact;
+};
+
+/**
+ * Fetches content from the server and adds it to the DOM.
+ */
+const fetchContentAndAddToDom = () => {
+    console.log('Fetching the content from the server.');
+
+    const responsePromise = fetch('/data');
+    responsePromise.then(handleResponse);
+};
+
+/**
+ * Handles response by converting it to text and passing the result to
+ * addQuoteToDom().
+ */
+const handleResponse = response => {
+  console.log('Handling the response.');
+
+  // response.text() returns a Promise, because the response is a stream of
+  // content and not a simple variable.
+  const textPromise = response.text();
+
+  // When the response is converted to text, pass the result into the
+  // addQuoteToDom() function.
+  textPromise.then(addContentToDOM);
+};
+
+/** Prints a message to the DOM. */
+const addContentToDOM = content => {
+  console.log('Adding content to dom: ' + content);
+
+  quoteContainer.innerText = content;
 };
