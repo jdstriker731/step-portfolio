@@ -30,15 +30,12 @@ const randomFactGenerator = () => {
 };
 
 /**
- * Fetches a the content from the server and adds it to the DOM.
+ * Fetches content from the server and adds it to the DOM.
  */
-const getServletContent = () => {
+const fetchContentAndAddToDom = () => {
     console.log('Fetching the content from the server.');
 
-    // The fetch() function returns a Promise because the request is asynchronous.
     const responsePromise = fetch('/data');
-
-    // When the request is complete, pass the response into handleResponse().
     responsePromise.then(handleResponse);
 };
 
@@ -58,7 +55,7 @@ const handleResponse = response => {
   textPromise.then(addContentToDOM);
 };
 
-/** Adds a random quote to the DOM. */
+/** Prints a message to the DOM */
 const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
