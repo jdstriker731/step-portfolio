@@ -24,7 +24,11 @@ header {
 }
 
 html {
-  background: url("images/blue_background.jpg") no-repeat center center fixed; 
+  background-image:
+    linear-gradient(
+      to right, 
+      #02c8fa, #4053cf
+    );
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
