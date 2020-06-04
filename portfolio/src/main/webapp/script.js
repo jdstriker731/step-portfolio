@@ -28,7 +28,6 @@ const randomFactGenerator = () => {
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
     // Add it to the page.
-    const factContainer = document.getElementById('fact-container');
     factContainer.innerText = randomFact;
 };
 
@@ -69,7 +68,8 @@ const addContentToDOM = content => {
  * Prints a random message to the DOM using JSON sent from DataServlet.java.
  */
 const fetchMessageUsingJSON = () => {
-  fetch('/data').then(response => response.json()).then( messagesObj => {
+  fetch('/data').then(response => response.json()).then( 
+    messagesObj => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
