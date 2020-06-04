@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const quoteContainer = document.getElementById('servlet-content');
+const factContainer = document.getElementById('servlet-content');
+
 const randomFactGenerator = () => {
     const facts = [
       'I used to ride dirtbikes up until 10th grade',
@@ -25,20 +28,16 @@ const randomFactGenerator = () => {
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
     // Add it to the page.
-    const factContainer = document.getElementById('fact-container');
     factContainer.innerText = randomFact;
 };
 
 /**
- * Fetches a the content from the server and adds it to the DOM.
+ * Fetches content from the server and adds it to the DOM.
  */
-const getServletContent = () => {
+const fetchContentAndAddToDom = () => {
     console.log('Fetching the content from the server.');
 
-    // The fetch() function returns a Promise because the request is asynchronous.
     const responsePromise = fetch('/data');
-
-    // When the request is complete, pass the response into handleResponse().
     responsePromise.then(handleResponse);
 };
 
@@ -58,16 +57,15 @@ const handleResponse = response => {
   textPromise.then(addContentToDOM);
 };
 
-/** Adds a random quote to the DOM. */
+/** Prints a message to the DOM. */
 const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
-  const quoteContainer = document.getElementById('servlet-content');
   quoteContainer.innerText = content;
-}; 
+};
 
 const getJSONContent = () => {
-  fetch('/data').then(response => response.json()).then( messagesObj => {
+  fetch('/data').then(response => response.json()).then(messagesObj => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
@@ -83,12 +81,11 @@ const getJSONContent = () => {
 };
 
 const showUserComments = () => {
-  fetch('/data').then(response => response.json()).then( commentsObj => {
+  fetch('/data').then(response => response.json()).then(comments => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
-    const commentsSize = commentsObj.comments.length;
-    const userComments = commentsObj.comments;
+    const commentsSize = comments.length;
 
     // If there are no comments
     if (commentsSize === 0)
@@ -99,7 +96,7 @@ const showUserComments = () => {
       const commentsSection = document.getElementById('comments-section');
       for (let i = 0; i < commentsSize; i++)
       {
-        commentsSection.appendChild(createCommentElement(userComments[i]));
+        commentsSection.appendChild(createCommentElement(comments[i]));
         commentsSection.appendChild(createHrElement());
       }
     }
