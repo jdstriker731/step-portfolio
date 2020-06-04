@@ -65,7 +65,7 @@ const addContentToDOM = content => {
 };
 
 const getJSONContent = () => {
-  fetch('/data').then(response => response.json()).then( messagesObj => {
+  fetch('/data').then(response => response.json()).then(messagesObj => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
@@ -81,12 +81,11 @@ const getJSONContent = () => {
 };
 
 const showUserComments = () => {
-  fetch('/data').then(response => response.json()).then( commentsObj => {
+  fetch('/data').then(response => response.json()).then(comments => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
-    const commentsSize = commentsObj.comments.length;
-    const userComments = commentsObj.comments;
+    const commentsSize = comments.length;
 
     // If there are no comments
     if (commentsSize === 0)
@@ -97,7 +96,7 @@ const showUserComments = () => {
       const commentsSection = document.getElementById('comments-section');
       for (let i = 0; i < commentsSize; i++)
       {
-        commentsSection.appendChild(createCommentElement(userComments[i]));
+        commentsSection.appendChild(createCommentElement(comments[i]));
         commentsSection.appendChild(createHrElement());
       }
     }

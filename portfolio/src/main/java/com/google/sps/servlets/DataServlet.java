@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import java.util.ArrayList;
+import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +45,16 @@ public class DataServlet extends HttpServlet {
       comments.add(comment);
     }
 
-    // Turn the comments ArrayList into a JSON string
-    String json = convertToJson(comments);
+    // Make sure the comments are trimmed and store in array 
+    String[] usersComments = new String[comments.size()];
+    for (int i = 0; i < usersComments.length; i++) {
+        usersComments[i] = comments.get(i).trim();
+    }
+
+    // Turn the comments ArrayList into a JSON string.
+    String json = convertToJsonUsingGson(usersComments);
     
-    // Send the JSON as the response
+    // Send the JSON as the response.
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
@@ -70,6 +77,13 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
+   * Converts the Java array into a JSON string using Gson
+   */
+  private String convertToJsonUsingGson(String[] comments) {
+    return new Gson().toJson(comments);
+  }
+
+  /**
    * Converts the messages ArrayList into a JSON string using manual String concatentation.
    */
   private String convertToJson(ArrayList<String> array) {
@@ -83,7 +97,7 @@ public class DataServlet extends HttpServlet {
 
     // Loop through comments array to create JSON string
     for (int i = 0; i < array.size(); i++){
-      json += "\"" + array.get(i) + "\"";
+      json += "\"" + array.get(i).trim() + "\"";
 
       // If currently looking at last (or only item) in list
       if (i == array.size() - 1) {
