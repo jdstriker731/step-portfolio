@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const quoteContainer = document.getElementById('servlet-content');
+const factContainer = document.getElementById('servlet-content');
 
 const randomFactGenerator = () => {
     const facts = [
@@ -27,7 +28,6 @@ const randomFactGenerator = () => {
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
     // Add it to the page.
-    const factContainer = document.getElementById('fact-container');
     factContainer.innerText = randomFact;
 };
 
@@ -62,4 +62,57 @@ const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
   quoteContainer.innerText = content;
+};
+
+const getJSONContent = () => {
+  fetch('/data').then(response => response.json()).then( messagesObj => {
+    // messagesObj is an object, not a string, so we have to
+    // reference its fields to create HTML content
+    
+    // Get random message from the the "messages" field
+    // of messagesObj
+    const messagesSize = messagesObj.messages.length;
+    const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
+
+    // Add message to the page.
+    const factContainer = document.getElementById('servlet-content');
+    factContainer.innerText = message;
+  });
+};
+
+const showUserComments = () => {
+  fetch('/data').then(response => response.json()).then( commentsObj => {
+    // messagesObj is an object, not a string, so we have to
+    // reference its fields to create HTML content
+    
+    const commentsSize = commentsObj.comments.length;
+    const userComments = commentsObj.comments;
+
+    // If there are no comments
+    if (commentsSize === 0)
+    {
+      return;
+    } else {
+      // Build the comments setion with all of the user comments, one after the other
+      const commentsSection = document.getElementById('comments-section');
+      for (let i = 0; i < commentsSize; i++)
+      {
+        commentsSection.appendChild(createCommentElement(userComments[i]));
+        commentsSection.appendChild(createHrElement());
+      }
+    }
+  });
+};
+
+/** Creates an <h4> element containing text. */
+const createCommentElement = text => {
+  const commentElement = document.createElement('h4');
+  commentElement.innerText = text;
+  return commentElement;
+};
+
+/** Creates an <hr> element to separate comments */
+const createHrElement = () => {
+  const hrElement = document.createElement('hr');
+  return hrElement;
 };
