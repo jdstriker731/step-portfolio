@@ -55,10 +55,11 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
     String userCommentString = request.getParameter("user-comment");
+    String trimmmedString = userCommentString.trim();
     long timestamp = System.currentTimeMillis();
 
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("comment-string", userCommentString);
+    commentEntity.setProperty("comment-string", trimmmedString);
     commentEntity.setProperty("timestamp", timestamp);
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
