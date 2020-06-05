@@ -14,6 +14,7 @@
 
 const quoteContainer = document.getElementById('servlet-content');
 const factContainer = document.getElementById('servlet-content');
+const commentsSection = document.getElementById('comments-section');
 
 const randomFactGenerator = () => {
     const facts = [
@@ -80,8 +81,8 @@ const getJSONContent = () => {
   });
 };
 
-const showUserComments = () => {
-  fetch('/data').then(response => response.json()).then(comments => {
+const showUserComments = commentLimit => {
+  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
@@ -90,10 +91,12 @@ const showUserComments = () => {
     // If there are no comments
     if (commentsSize === 0)
     {
+      // Clear out whatever could be in the comments section already
+      commentsSection.innerHTML = "";  
       return;
     } else {
       // Build the comments setion with all of the user comments, one after the other
-      const commentsSection = document.getElementById('comments-section');
+      commentsSection.innerHTML = "";
       for (let i = 0; i < commentsSize; i++)
       {
         commentsSection.appendChild(createCommentElement(comments[i]));
@@ -114,4 +117,8 @@ const createCommentElement = text => {
 const createHrElement = () => {
   const hrElement = document.createElement('hr');
   return hrElement;
+};
+
+const modifyQueryString = (key, value) => {
+    //
 };

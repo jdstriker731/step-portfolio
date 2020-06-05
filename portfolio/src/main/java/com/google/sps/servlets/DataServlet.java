@@ -36,6 +36,9 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     
+    // Hard coded maxuimum number of comments that can be shown on the screen
+    int maxShowableComments = Integer.parseInt(request.getParameter("num-comments").trim());
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
@@ -45,11 +48,31 @@ public class DataServlet extends HttpServlet {
       comments.add(comment);
     }
 
+    String[] usersComments;
+    if (comments.size() == 0) {
+      //  If there are zero comments stored
+      usersComments = new String[0];
+    } else if (comments.size() <= maxShowableComments) {
+      //  If there are less than [maxShowableComments] comments already stored
+      usersComments = new String[comments.size()];
+      for (int i = 0; i < usersComments.length; i++) {
+        usersComments[i] = comments.get(i).trim();
+      }
+    } else {
+      // There are more than [maxShowableComments] comments stored already
+      usersComments = new String[maxShowableComments];  
+      for (int i = 0; i < usersComments.length; i++) {
+        usersComments[i] = comments.get(i).trim();
+      }
+    }
+
+    /*
     // Make sure the comments are trimmed and store in array 
-    String[] usersComments = new String[comments.size()];
+    String[] usersComments = new String[comments.size()];  
     for (int i = 0; i < usersComments.length; i++) {
         usersComments[i] = comments.get(i).trim();
     }
+    */
 
     // Turn the comments ArrayList into a JSON string.
     String json = convertToJsonUsingGson(usersComments);
