@@ -119,6 +119,6 @@ const createHrElement = () => {
   return hrElement;
 };
 
-const modifyQueryString = (key, value) => {
-    //
+const deleteAllComments = () => {
+  fetch('/delete-data', {method: 'POST'});
 };
