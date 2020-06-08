@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const quoteContainer = document.getElementById('servlet-content');
+const factContainer = document.getElementById('servlet-content');
 
 const randomFactGenerator = () => {
     const facts = [
@@ -27,7 +28,6 @@ const randomFactGenerator = () => {
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
     // Add it to the page.
-    const factContainer = document.getElementById('fact-container');
     factContainer.innerText = randomFact;
 };
 
@@ -62,4 +62,22 @@ const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
   quoteContainer.innerText = content;
+};
+
+/** 
+ * Prints a random message to the DOM using JSON sent from DataServlet.java.
+ */
+const fetchMessageUsingJSON = () => {
+  fetch('/data').then(response => response.json()).then(messagesObj => {
+    // messagesObj is an object, not a string, so we have to
+    // reference its fields to create HTML content
+    
+    // Get random message from the the "messages" field
+    // of messagesObj
+    const messagesSize = messagesObj.messages.length;
+    const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
+
+    // Add message to the page
+    factContainer.innerText = message;
+  });
 };
