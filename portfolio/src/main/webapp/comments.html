@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+    <title>Comments</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body onload="showUserComments(5)">
+    <div class="topnav">
+      <a class="active" href="index.html">Home</a>
+      <a href="me.html">About Me</a>
+      <a href="yale.html">Yale</a>
+      <a href="travels.html">Travels</a>
+      <a href="comments.html">Comments</a>
+    </div>
+    <header>
+      <h1>Comments</h1>
+    <header>
+    <div class="content-body">
+      <h2>Add comments about my portfolio page and how I can improve it</h2>
+      <hr>
+
+      <div id="comments-section"></div>
+
+      <label for="num-comments">Number of comments to show: </label>
+      <input name="num-comments" id="num-comments" type="number" min="0" max="50" step="1" onchange="showUserComments(this.value)">
+      <br>
+
+      <form action="/data" method="POST">
+        <label for="user-comment">Enter your comment</label>
+        <br>
+        <textarea name="user-comment" id="user-comment" rows="5" cols="40">
+        </textarea>
+        <br>
+        <input type="submit" value="submit comment">
+      </form>
+      <br>
+      <br>
+      <form action="/delete-data" method="POST">
+        <input type="submit" value="Delete All Comments">
+      </form>
+    </div>
+    <footer>
+      <h3>
+          Contact Information: (607) 752-4042    
+          john.dallard@yale.edu    
+          https://www.linkedin.com/in/jonathan-dallard-5b956b196/
+      </h3>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
