@@ -33,7 +33,7 @@ const randomFactGenerator = () => {
 };
 
 /**
- * Fetches a the content from the server and adds it to the DOM.
+ * Fetches content from the server and adds it to the DOM.
  */
 const getServletContent = () => {
     console.log('Fetching the content from the server.');
@@ -88,19 +88,11 @@ const showUserComments = () => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
-    const commentsSize = comments.length;
-
-    // If there are no comments
-    if (commentsSize === 0)
+    // Build the comments setion with all of the user comments, one after the other
+    for (let i = 0; i < comments.length; i++)
     {
-      return;
-    } else {
-      // Build the comments setion with all of the user comments, one after the other
-      for (let i = 0; i < commentsSize; i++)
-      {
-        commentsSection.appendChild(createCommentElement(comments[i]));
-        commentsSection.appendChild(createHrElement());
-      }
+       commentsSection.appendChild(createCommentElement(comments[i]));
+       commentsSection.appendChild(createHrElement());
     }
   });
 };
