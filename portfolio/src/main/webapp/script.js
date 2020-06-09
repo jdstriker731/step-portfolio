@@ -89,8 +89,7 @@ const showUserComments = () => {
     // reference its fields to create HTML content
     
     // Build the comments setion with all of the user comments, one after the other
-    for (let i = 0; i < comments.length; i++)
-    {
+    for (let i = 0; i < comments.length; i++) {
        commentsSection.appendChild(createCommentElement(comments[i]));
        commentsSection.appendChild(createHrElement());
     }
