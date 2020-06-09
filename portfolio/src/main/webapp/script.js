@@ -77,7 +77,7 @@ const fetchMessageUsingJSON = () => {
     // of messagesObj
     const messagesSize = messagesObj.messages.length;
     const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
-
+    
     // Add message to the page.
     factContainer.innerText = message;
   });
