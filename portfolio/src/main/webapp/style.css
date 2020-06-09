@@ -47,6 +47,12 @@ img {
   display: inline-block;
 }
 
+#map {
+  border: thin solid black;
+  height: 500px;
+  width: 500px;
+}
+
 .london-photos {
   width: 80%;
   min-width: 500px;
