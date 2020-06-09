@@ -128,7 +128,16 @@ const deleteAllComments = () => {
 
 /** Creates a map and adds it to the page. */
 function initMap() {
-  const map = new google.maps.Map(
-    document.getElementById('map'),
-    {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+  // Map for Silliman College
+  const mapSilliman = new google.maps.Map(
+    document.getElementById('map-silliman'),
+    {center: {lat: 41.310919, lng: -72.924965}, zoom: 16});
+  
+  // Marker for Silliman College
+  const sillimanMarker = new google.maps.Marker({
+    position: {lat: 41.310919, lng: -72.924965},
+    map: mapSilliman,
+    title: 'Silliman College'
+  });
 }
+ 
