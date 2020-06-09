@@ -47,9 +47,19 @@ img {
   display: inline-block;
 }
 
+#map-cisland {
+  height: 500px;
+  width: 100%;
+}
+
+#map-home {
+  height: 500px;
+  width: 100%;
+}
+
 #map-silliman {
   height: 500px;
-  width: 500px;
+  width: 100%;
 }
 
 .london-photos {

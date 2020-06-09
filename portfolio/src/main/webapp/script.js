@@ -127,17 +127,41 @@ const deleteAllComments = () => {
 
 
 /** Creates a map and adds it to the page. */
-function initMap() {
+function initMaps() {
   // Map for Silliman College
   const mapSilliman = new google.maps.Map(
     document.getElementById('map-silliman'),
     {center: {lat: 41.310919, lng: -72.924965}, zoom: 16});
+
+  // Map for my home (in Brooklyn)
+  const mapHome = new google.maps.Map(
+    document.getElementById('map-home'),
+    {center: {lat: 40.649097, lng: -73.930391}, zoom: 16});
+  
+  // Map for Coney Island
+  const mapConeyIsland = new google.maps.Map(
+    document.getElementById('map-cisland'),
+    {center: {lat: 40.574799, lng: -73.977180}, zoom: 16});
   
   // Marker for Silliman College
   const sillimanMarker = new google.maps.Marker({
     position: {lat: 41.310919, lng: -72.924965},
     map: mapSilliman,
     title: 'Silliman College'
+  });
+
+  // Marker for my home (in Brooklyn)
+  const homeMarker = new google.maps.Marker({
+    position: {lat: 40.649097, lng: -73.930391},
+    map: mapHome,
+    title: 'Home'
+  });
+
+  // Marker for Coney Island
+  const coneyIslandMarker = new google.maps.Marker({
+    position: {lat: 40.574799, lng: -73.977180},
+    map: mapConeyIsland,
+    title: 'Coney Island'
   });
 }
  
