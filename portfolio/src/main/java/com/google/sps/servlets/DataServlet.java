@@ -20,6 +20,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -66,14 +68,6 @@ public class DataServlet extends HttpServlet {
       }
     }
 
-    /*
-    // Make sure the comments are trimmed and store in array 
-    String[] usersComments = new String[comments.size()];  
-    for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
-    }
-    */
-
     // Turn the comments ArrayList into a JSON string.
     String json = convertToJsonUsingGson(usersComments);
     
@@ -84,12 +78,17 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+    
+    UserService userService = UserServiceFactory.getUserService();
+
     String userCommentString = request.getParameter("user-comment");
     String trimmmedString = userCommentString.trim();
+    String email = userService.getCurrentUser().getEmail();
     long timestamp = System.currentTimeMillis();
 
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("comment-string", trimmmedString);
+    commentEntity.setProperty("email", email);
     commentEntity.setProperty("timestamp", timestamp);
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -104,31 +103,5 @@ public class DataServlet extends HttpServlet {
    */
   private String convertToJsonUsingGson(String[] comments) {
     return new Gson().toJson(comments);
-  }
-
-  /**
-   * Converts the messages ArrayList into a JSON string using manual String concatentation.
-   */
-  private String convertToJson(ArrayList<String> array) {
-    String json = "{";
-    json += "\"comments\": [";
-
-    if (array.size() == 0) {
-      json += "]}";
-      return json;
-    }
-
-    // Loop through comments array to create JSON string
-    for (int i = 0; i < array.size(); i++){
-      json += "\"" + array.get(i).trim() + "\"";
-
-      // If currently looking at last (or only item) in list
-      if (i == array.size() - 1) {
-        json += "]}";
-      } else {
-        json += ", ";
-      }
-    }
-    return json;
   }
 }

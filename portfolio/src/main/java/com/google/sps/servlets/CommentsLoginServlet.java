@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/login-status")
-public class LoginStatusServlet extends HttpServlet {
+@WebServlet("/see-comments")
+public class CommentsLoginServlet extends HttpServlet {
 
     @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -32,19 +32,9 @@ public class LoginStatusServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
 
     if (userService.isUserLoggedIn()) {
-      String userEmail = userService.getCurrentUser().getEmail();
-      String urlToRedirectToAfterLogOut = "/index.html";
-      String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterLogOut);
-
-      response.getWriter().println("<p>Hello " + userEmail + "! You are currently logged in.</p>");
-      response.getWriter().println("<p>Logout and return to home page: <a href=\"" + logoutUrl + "\">Home</a>.<p>");
+      response.sendRedirect("/comments.html");
     } else {
-      String urlToRedirectToAfterLogIn = "/comments.html";
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterLogIn);
-
-      response.getWriter().println("<p>Hello there! You need to login to access the comments page.</p>");
-      response.getWriter().println("<p>Login <a href=\""+ loginUrl + "\">here</a>.</p>");
-      response.getWriter().println("<p>Return to Home page: <a href=\"index.html\">Home</a>.</p>");
+      response.sendRedirect("/login-status");
     }
   }
 }

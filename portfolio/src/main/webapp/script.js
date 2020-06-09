@@ -124,3 +124,8 @@ const createHrElement = () => {
 const deleteAllComments = () => {
   fetch('/delete-data', {method: 'POST'});
 };
+
+const checkLoginStatus = () => {
+  // Determine Log-in status of user
+  window.location.replace('/login-status');
+};
