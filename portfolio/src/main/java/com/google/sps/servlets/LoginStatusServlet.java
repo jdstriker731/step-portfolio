@@ -38,11 +38,13 @@ public class LoginStatusServlet extends HttpServlet {
 
       response.getWriter().println("<p>Hello " + userEmail + "! You are currently logged in.</p>");
       response.getWriter().println("<p>Logout and return to home page: <a href=\"" + logoutUrl + "\">Home</a>.<p>");
+
+      //response.sendRedirect("/comments.html");
     } else {
       String urlToRedirectToAfterLogIn = "/login-status";
       String loginUrl = userService.createLoginURL(urlToRedirectToAfterLogIn);
 
-      response.getWriter().println("<p>Hello there!</p>");
+      response.getWriter().println("<p>Hello there! You need to login to access the comments page.</p>");
       response.getWriter().println("<p>Login <a href=\""+ loginUrl + "\">here</a>.</p>");
     }
   }
