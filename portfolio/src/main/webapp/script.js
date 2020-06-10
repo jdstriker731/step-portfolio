@@ -14,6 +14,7 @@
 
 const quoteContainer = document.getElementById('servlet-content');
 const factContainer = document.getElementById('servlet-content');
+const commentsSection = document.getElementById('comments-section');
 
 const randomFactGenerator = () => {
     const facts = [
@@ -80,4 +81,33 @@ const fetchMessageUsingJSON = () => {
     // Add message to the page
     factContainer.innerText = message;
   });
+};
+
+const showUserComments = commentLimit => {
+  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
+    
+    // Build the comments setion with all of the user comments, one after the other
+    commentsSection.innerHTML = "";
+    for (let i = 0; i < comments.length; i++) {
+      commentsSection.appendChild(createCommentElement(comments[i]));
+      commentsSection.appendChild(createHrElement());
+    }
+  });
+};
+
+/** Creates an <h4> element containing text. */
+const createCommentElement = text => {
+  const commentElement = document.createElement('h4');
+  commentElement.innerText = text;
+  return commentElement;
+};
+
+/** Creates an <hr> element to separate comments */
+const createHrElement = () => {
+  const hrElement = document.createElement('hr');
+  return hrElement;
+};
+
+const deleteAllComments = () => {
+  fetch('/delete-data', {method: 'POST'});
 };
