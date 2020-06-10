@@ -84,26 +84,18 @@ const fetchMessageUsingJSON = () => {
 };
 
 const showUserComments = commentLimit => {
-  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
+  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(commentsObj => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
-    const commentsSize = comments.length;
+    //const commentsSize = comments.length;
 
-    // If there are no comments
-    if (commentsSize === 0)
-    {
-      // Clear out whatever could be in the comments section already
-      commentsSection.innerHTML = "";  
-      return;
-    } else {
-      // Build the comments setion with all of the user comments, one after the other
-      commentsSection.innerHTML = "";
-      for (let i = 0; i < commentsSize; i++)
-      {
-        commentsSection.appendChild(createCommentElement(comments[i]));
-        commentsSection.appendChild(createHrElement());
-      }
+    // Build the comments setion with all of the user comments, one after the other
+    commentsSection.innerHTML = "";
+    for (let i = 0; i < commentsObj.comments.length; i++) {
+      commentsSection.appendChild(createCommentElement(commentsObj.comments[i]));
+      commentsSection.appendChild(createUserElement(commentsObj.emails[i]));
+      commentsSection.appendChild(createHrElement());
     }
   });
 };
@@ -113,6 +105,13 @@ const createCommentElement = text => {
   const commentElement = document.createElement('h4');
   commentElement.innerText = text;
   return commentElement;
+};
+
+/** Creates a <h6> element to identify the user the made the comment */
+const createUserElement = text => {
+  const userElement = document.createElement('h6');
+  userElement.innerText = 'User: ' + text;
+  return userElement;
 };
 
 /** Creates an <hr> element to separate comments */

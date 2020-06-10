@@ -45,31 +45,40 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
 
     ArrayList<String> comments = new ArrayList<String>();
+    ArrayList<String> emails = new ArrayList<String>();
     for (Entity entity : results.asIterable()) {
       String comment = (String) entity.getProperty("comment-string");
+      String email = (String) entity.getProperty("email");
       comments.add(comment);
+      emails.add(email);
     }
 
     String[] usersComments;
+    String[] usersEmails;
     if (comments.size() == 0) {
       //  If there are zero comments stored
       usersComments = new String[0];
+      usersEmails = new String[0];
     } else if (comments.size() <= maxShowableComments) {
       //  If there are less than [maxShowableComments] comments already stored
       usersComments = new String[comments.size()];
+      usersEmails = new String[emails.size()];
       for (int i = 0; i < usersComments.length; i++) {
         usersComments[i] = comments.get(i).trim();
+        usersEmails[i] = emails.get(i);
       }
     } else {
       // There are more than [maxShowableComments] comments stored already
-      usersComments = new String[maxShowableComments];  
+      usersComments = new String[maxShowableComments]; 
+      usersEmails = new String[maxShowableComments]; 
       for (int i = 0; i < usersComments.length; i++) {
         usersComments[i] = comments.get(i).trim();
+        usersEmails[i] = emails.get(i);
       }
     }
 
     // Turn the comments ArrayList into a JSON string.
-    String json = convertToJsonUsingGson(usersComments);
+    String json = convertToJson(usersComments, usersEmails);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
@@ -103,5 +112,49 @@ public class DataServlet extends HttpServlet {
    */
   private String convertToJsonUsingGson(String[] comments) {
     return new Gson().toJson(comments);
+  }
+
+  /**
+   * Converts the messages ArrayList into a JSON string using manual String concatentation.
+   */
+  private String convertToJson(String[] comments, String[] emails) {
+    String json = "{";
+    json += "\"comments\": [";
+
+    if (comments.length == 0) {
+      json += "]";
+    }
+
+    // Loop through comments array to create JSON string
+    for (int i = 0; i < comments.length; i++){
+      json += "\"" + comments[i].trim() + "\"";
+
+      // If currently looking at last (or only item) in list
+      if (i == comments.length - 1) {
+        json += "]";
+      } else {
+        json += ", ";
+      }
+    }
+
+    json += ", \"emails\": [";
+
+    if (emails.length == 0) {
+      json += "]}";
+      return json;
+    }
+
+    // Loop through the emails array to create JSON string
+    for (int i = 0; i < emails.length; i++) {
+      json += "\"" + emails[i] + "\"";
+
+      // if currently looking at last (or only item) in list
+      if (i == emails.length - 1) {
+        json += "]}";
+      } else {
+        json += ", ";
+      }
+    }
+    return json;
   }
 }
