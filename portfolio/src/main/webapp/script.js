@@ -111,3 +111,8 @@ const createHrElement = () => {
 const deleteAllComments = () => {
   fetch('/delete-data', {method: 'POST'});
 };
+
+const revealFavAnime = () => {
+  const animeContainer = document.getElementById('fav-anime-container');
+  animeContainer.innerHTML = "My Hero Academia"
+}

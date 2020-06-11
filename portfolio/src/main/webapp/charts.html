@@ -21,7 +21,22 @@
       <h2>These are some interesting charts about me</h2>
       
       <div id="ethnicity-chart"></div>
-
+      <br>
+      <div id="anime-chart"></div>
+      <form action="/anime-data" method="POST">
+        <select name="anime">
+          <option value="Dragon-Ball-Z">Dragon Ball Z</option>
+          <option value="Black-Clover">Black Clover</option>
+          <option value="My-Hero-Academia">My Hero Academia</option>
+          <option value="Naruto">Naruto</option>
+          <option value="Full-Metal Alchemist">Full Metal Alchemist</option>
+          <option value="Gurren-Lagann">Gurren Lagann</option>
+        </select>
+        <input type="submit" value="submit">
+      </form>
+      <br>
+      <button onclick="revealFavAnime()">My Favorite Anime</button>
+      <h3 id="fav-anime-container"></h3>
     </div>
     <footer>
       <h3>
@@ -31,7 +46,8 @@
       </h3>
     </footer>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="drawChart.js"></script>
+    <script src="ethnicityChart.js"></script>
+    <script src="animeChart.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

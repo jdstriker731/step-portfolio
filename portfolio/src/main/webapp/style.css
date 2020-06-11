@@ -17,7 +17,12 @@ body {
 
 #ethnicity-chart {
   display: inline-block;
-  margin: 0 auto;;
+  margin: 0 auto;
+}
+
+#anime-chart {
+  display: inline-block;
+  margin: 0 auto; 
 }
 
 footer {
