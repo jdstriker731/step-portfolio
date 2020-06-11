@@ -85,25 +85,13 @@ const fetchMessageUsingJSON = () => {
 
 const showUserComments = commentLimit => {
   fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
-    // messagesObj is an object, not a string, so we have to
-    // reference its fields to create HTML content
     
-    const commentsSize = comments.length;
-
-    // If there are no comments
-    if (commentsSize === 0)
-    {
-      // Clear out whatever could be in the comments section already
-      commentsSection.innerHTML = "";  
-      return;
-    } else {
-      // Build the comments setion with all of the user comments, one after the other
-      commentsSection.innerHTML = "";
-      for (let i = 0; i < commentsSize; i++)
-      {
-        commentsSection.appendChild(createCommentElement(comments[i]));
-        commentsSection.appendChild(createHrElement());
-      }
+    
+    // Build the comments setion with all of the user comments, one after the other
+    commentsSection.innerHTML = "";
+    for (let i = 0; i < comments.length; i++) {
+      commentsSection.appendChild(createCommentElement(comments[i]));
+      commentsSection.appendChild(createHrElement());
     }
   });
 };
@@ -124,7 +112,6 @@ const createHrElement = () => {
 const deleteAllComments = () => {
   fetch('/delete-data', {method: 'POST'});
 };
-
 
 /** Creates a map and adds it to the page. */
 function initMaps() {
