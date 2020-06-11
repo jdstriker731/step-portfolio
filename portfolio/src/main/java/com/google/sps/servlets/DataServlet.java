@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,41 +26,35 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  private ArrayList<String> messages;
+  private ArrayList<String> comments = new ArrayList<String>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    messages = new ArrayList<String>();
-    messages.add("Hello, world! You\'re visiting my portfolio site");
-    messages.add("It's a pretty cloudy day in Brooklyn, isn\'t it?");
-    messages.add("This is my first summer as a Google Intern! I\'m so excited!");
-    messages.add("I wonder what cool web development skills I\'ll gain this summer");
-    messages.add("Serious question now: pineapple on pizza?");
-
     // Turn the messages ArrayList into a JSON string
-    String json = convertToJson(messages);
+    String json = convertToJsonUsingGson(comments);
     
     // Send the JSON as the response
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+    // Get the new comment posted from the form
+    String userCommentString = request.getParameter("user-comment");
+    String trimmmedString = userCommentString.trim();
+
+    // Add this new comment to the comments ArrayList
+    comments.add(trimmmedString);
+
+    // Redirect user back to the comments page.
+    response.sendRedirect("/comments.html");
+  }
+  
   /**
-   * Converts the messages ArrayList into a JSON string using manual String concatentation.
+   * Converts the Java array into a JSON string using Gson
    */
-  private String convertToJson(ArrayList<String> array) {
-    String json = "{";
-    json += "\"messages\": [";
-    json += "\"" + array.get(0) + "\"";
-    json += ", ";
-    json += "\"" + array.get(1) + "\"";
-    json += ", ";
-    json += "\"" + array.get(2) + "\"";
-    json += ", ";
-    json += "\"" + array.get(3) + "\"";
-    json += ", ";
-    json += "\"" + array.get(4) + "\""; 
-    json += "]}";
-    return json;
+  private String convertToJsonUsingGson(ArrayList<String> comments) {
+    return new Gson().toJson(comments);
   }
 }
