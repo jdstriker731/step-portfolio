@@ -14,6 +14,7 @@
 
 const quoteContainer = document.getElementById('servlet-content');
 const factContainer = document.getElementById('servlet-content');
+const commentsSection = document.getElementById('comments-section');
 
 const randomFactGenerator = () => {
     const facts = [
@@ -34,7 +35,7 @@ const randomFactGenerator = () => {
 /**
  * Fetches content from the server and adds it to the DOM.
  */
-const fetchContentAndAddToDom = () => {
+const getServletContent = () => {
     console.log('Fetching the content from the server.');
 
     const responsePromise = fetch('/data');
@@ -62,9 +63,12 @@ const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
   quoteContainer.innerText = content;
-};
+}; 
 
-const getJSONContent = () => {
+/** 
+ * Prints a random message to the DOM using JSON sent from DataServlet.java.
+ */
+const fetchMessageUsingJSON = () => {
   fetch('/data').then(response => response.json()).then(messagesObj => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
@@ -73,9 +77,8 @@ const getJSONContent = () => {
     // of messagesObj
     const messagesSize = messagesObj.messages.length;
     const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
-
+    
     // Add message to the page.
-    const factContainer = document.getElementById('servlet-content');
     factContainer.innerText = message;
   });
 };
@@ -85,20 +88,10 @@ const showUserComments = () => {
     // messagesObj is an object, not a string, so we have to
     // reference its fields to create HTML content
     
-    const commentsSize = comments.length;
-
-    // If there are no comments
-    if (commentsSize === 0)
-    {
-      return;
-    } else {
-      // Build the comments setion with all of the user comments, one after the other
-      const commentsSection = document.getElementById('comments-section');
-      for (let i = 0; i < commentsSize; i++)
-      {
-        commentsSection.appendChild(createCommentElement(comments[i]));
-        commentsSection.appendChild(createHrElement());
-      }
+    // Build the comments setion with all of the user comments, one after the other
+    for (let i = 0; i < comments.length; i++) {
+       commentsSection.appendChild(createCommentElement(comments[i]));
+       commentsSection.appendChild(createHrElement());
     }
   });
 };

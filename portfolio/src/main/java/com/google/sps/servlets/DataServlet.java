@@ -82,30 +82,4 @@ public class DataServlet extends HttpServlet {
   private String convertToJsonUsingGson(String[] comments) {
     return new Gson().toJson(comments);
   }
-
-  /**
-   * Converts the messages ArrayList into a JSON string using manual String concatentation.
-   */
-  private String convertToJson(ArrayList<String> array) {
-    String json = "{";
-    json += "\"comments\": [";
-
-    if (array.size() == 0) {
-      json += "]}";
-      return json;
-    }
-
-    // Loop through comments array to create JSON string
-    for (int i = 0; i < array.size(); i++){
-      json += "\"" + array.get(i).trim() + "\"";
-
-      // If currently looking at last (or only item) in list
-      if (i == array.size() - 1) {
-        json += "]}";
-      } else {
-        json += ", ";
-      }
-    }
-    return json;
-  }
 }
