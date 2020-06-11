@@ -14,6 +14,12 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -26,35 +32,54 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  private ArrayList<String> comments = new ArrayList<String>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Turn the messages ArrayList into a JSON string
-    String json = convertToJsonUsingGson(comments);
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     
-    // Send the JSON as the response
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    ArrayList<String> comments = new ArrayList<String>();
+    for (Entity entity : results.asIterable()) {
+      String comment = (String) entity.getProperty("comment-string");
+      comments.add(comment);
+    }
+
+    // Make sure the comments are trimmed and store in array 
+    String[] usersComments = new String[comments.size()];
+    for (int i = 0; i < usersComments.length; i++) {
+        usersComments[i] = comments.get(i).trim();
+    }
+
+    // Turn the comments ArrayList into a JSON string.
+    String json = convertToJsonUsingGson(usersComments);
+    
+    // Send the JSON as the response.
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
-    // Get the new comment posted from the form
     String userCommentString = request.getParameter("user-comment");
     String trimmmedString = userCommentString.trim();
+    long timestamp = System.currentTimeMillis();
 
-    // Add this new comment to the comments ArrayList
-    comments.add(trimmmedString);
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("comment-string", trimmmedString);
+    commentEntity.setProperty("timestamp", timestamp);
+    
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
 
     // Redirect user back to the comments page.
     response.sendRedirect("/comments.html");
   }
-  
+
   /**
    * Converts the Java array into a JSON string using Gson
    */
-  private String convertToJsonUsingGson(ArrayList<String> comments) {
+  private String convertToJsonUsingGson(String[] comments) {
     return new Gson().toJson(comments);
   }
 }
