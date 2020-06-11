@@ -85,10 +85,6 @@ const fetchMessageUsingJSON = () => {
 
 const showUserComments = commentLimit => {
   fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(commentsObj => {
-    // messagesObj is an object, not a string, so we have to
-    // reference its fields to create HTML content
-    
-    //const commentsSize = comments.length;
 
     // Build the comments setion with all of the user comments, one after the other
     commentsSection.innerHTML = "";
@@ -107,17 +103,17 @@ const createCommentElement = text => {
   return commentElement;
 };
 
+/** Creates an <hr> element to separate comments */
+const createHrElement = () => {
+  const hrElement = document.createElement('hr');
+  return hrElement;
+};
+
 /** Creates a <h6> element to identify the user the made the comment */
 const createUserElement = text => {
   const userElement = document.createElement('h6');
   userElement.innerText = 'User: ' + text;
   return userElement;
-};
-
-/** Creates an <hr> element to separate comments */
-const createHrElement = () => {
-  const hrElement = document.createElement('hr');
-  return hrElement;
 };
 
 const deleteAllComments = () => {
