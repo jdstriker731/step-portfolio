@@ -36,7 +36,7 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     
-    // Hard coded maxuimum number of comments that can be shown on the screen
+    // Maximum number of comments that can be shown on the screen
     int maxShowableComments = Integer.parseInt(request.getParameter("num-comments").trim());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
