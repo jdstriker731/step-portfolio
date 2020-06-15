@@ -48,25 +48,25 @@ public class DataServlet extends HttpServlet {
       comments.add(comment);
     }
 
-    String[] usersComments;
+    ArrayList<String> usersComments;
     if (comments.size() == 0) {
       //  If there are zero comments stored
-      usersComments = new String[0];
-    } else if (comments.size() <= maxShowableComments) {
+      usersComments = new ArrayList<String>();
+    } else if (comments.size() <= maxShowableComments ) {
       //  If there are less than [maxShowableComments] comments already stored
-      usersComments = new String[comments.size()];
-      for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
+      usersComments = new ArrayList<String>();
+      for (int i = 0; i < comments.size(); i++) {
+        usersComments.add(comments.get(i).trim()); 
       }
     } else {
       // There are more than [maxShowableComments] comments stored already
-      usersComments = new String[maxShowableComments];  
-      for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
+      usersComments = new ArrayList<String>();  
+      for (int i = 0; i < maxShowableComments; i++) {
+        usersComments.add(comments.get(i).trim());
       }
     }
 
-    // Turn the comments ArrayList into a JSON string.
+    // Turn the userComments ArrayList into a JSON string.
     String json = convertToJsonUsingGson(usersComments);
     
     // Send the JSON as the response.
@@ -94,7 +94,7 @@ public class DataServlet extends HttpServlet {
   /**
    * Converts the Java array into a JSON string using Gson
    */
-  private String convertToJsonUsingGson(String[] comments) {
+  private String convertToJsonUsingGson(ArrayList<String> comments) {
     return new Gson().toJson(comments);
   }
 }
