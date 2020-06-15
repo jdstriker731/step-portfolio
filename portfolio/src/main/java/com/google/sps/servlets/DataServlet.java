@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
-  private static final Gson gson = new Gson();
+  private static final Gson GSON = new Gson();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -65,7 +65,7 @@ public class DataServlet extends HttpServlet {
     }
 
     // Turn the userComments ArrayList into a JSON string.
-    String json = gson.toJson(usersComments);
+    String json = GSON.toJson(usersComments);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
