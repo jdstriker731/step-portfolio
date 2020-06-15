@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
+  Gson gson = new Gson();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
@@ -48,26 +51,21 @@ public class DataServlet extends HttpServlet {
       comments.add(comment);
     }
 
-    ArrayList<String> usersComments;
-    if (comments.size() == 0) {
-      //  If there are zero comments stored
-      usersComments = new ArrayList<String>();
-    } else if (comments.size() <= maxShowableComments ) {
+    List<String> usersComments = new ArrayList<String>();
+    if (comments.size() <= maxShowableComments) {
       //  If there are less than [maxShowableComments] comments already stored
-      usersComments = new ArrayList<String>();
       for (int i = 0; i < comments.size(); i++) {
         usersComments.add(comments.get(i).trim()); 
       }
     } else {
       // There are more than [maxShowableComments] comments stored already
-      usersComments = new ArrayList<String>();  
       for (int i = 0; i < maxShowableComments; i++) {
         usersComments.add(comments.get(i).trim());
       }
     }
 
     // Turn the userComments ArrayList into a JSON string.
-    String json = convertToJsonUsingGson(usersComments);
+    String json = gson.toJson(usersComments);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
@@ -89,12 +87,5 @@ public class DataServlet extends HttpServlet {
 
     // Redirect user back to the comments page.
     response.sendRedirect("/comments.html");
-  }
-
-  /**
-   * Converts the Java array into a JSON string using Gson
-   */
-  private String convertToJsonUsingGson(ArrayList<String> comments) {
-    return new Gson().toJson(comments);
   }
 }

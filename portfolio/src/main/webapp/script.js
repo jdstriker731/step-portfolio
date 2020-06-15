@@ -83,50 +83,6 @@ const fetchMessageUsingJSON = () => {
   });
 };
 
-const showUserComments = () => {
-  fetch('/data').then(response => response.json()).then(comments => {
-    // messagesObj is an object, not a string, so we have to
-    // reference its fields to create HTML content
-    
-    // Build the comments setion with all of the user comments, one after the other
-    for (let i = 0; i < comments.length; i++) {
-       commentsSection.appendChild(createCommentElement(comments[i]));
-       commentsSection.appendChild(createHrElement());
-    }
-  });
-};
-
-/** Creates an <h4> element containing text. */
-const createCommentElement = text => {
-  const commentElement = document.createElement('h4');
-  commentElement.innerText = text;
-  return commentElement;
-};
-
-/** Creates an <hr> element to separate comments */
-const createHrElement = () => {
-  const hrElement = document.createElement('hr');
-  return hrElement;
-};
-
-/** 
- * Prints a random message to the DOM using JSON sent from DataServlet.java.
- */
-const fetchMessageUsingJSON = () => {
-  fetch('/data').then(response => response.json()).then(messagesObj => {
-    // messagesObj is an object, not a string, so we have to
-    // reference its fields to create HTML content
-    
-    // Get random message from the the "messages" field
-    // of messagesObj
-    const messagesSize = messagesObj.messages.length;
-    const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
-    
-    // Add message to the page.
-    factContainer.innerText = message;
-  });
-};
-
 const showUserComments = commentLimit => {
   fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
 
