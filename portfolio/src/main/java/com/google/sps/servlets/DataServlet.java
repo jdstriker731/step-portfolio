@@ -24,6 +24,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,7 +39,7 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     
-    // Hard coded maxuimum number of comments that can be shown on the screen
+    // Maximum number of comments that can be shown on the screen
     int maxShowableComments = Integer.parseInt(request.getParameter("num-comments").trim());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -53,27 +54,19 @@ public class DataServlet extends HttpServlet {
       emails.add(email);
     }
 
-    String[] usersComments;
-    String[] usersEmails;
-    if (comments.size() == 0) {
-      //  If there are zero comments stored
-      usersComments = new String[0];
-      usersEmails = new String[0];
-    } else if (comments.size() <= maxShowableComments) {
+    List<String> usersComments = new ArrayList<String>();
+    List<String> usersEmails = new ArrayList<String>();
+    if (comments.size() <= maxShowableComments) {
       //  If there are less than [maxShowableComments] comments already stored
-      usersComments = new String[comments.size()];
-      usersEmails = new String[emails.size()];
-      for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
-        usersEmails[i] = emails.get(i);
+      for (int i = 0; i < comments.size(); i++) {
+        usersComments.add(comments.get(i).trim());
+        usersEmails.add(emails.get(i));
       }
     } else {
       // There are more than [maxShowableComments] comments stored already
-      usersComments = new String[maxShowableComments]; 
-      usersEmails = new String[maxShowableComments]; 
-      for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
-        usersEmails[i] = emails.get(i);
+      for (int i = 0; i < maxShowableComments; i++) {
+        usersComments.add(comments.get(i).trim());
+        usersEmails.add(emails.get(i));
       }
     }
 
@@ -108,29 +101,22 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * Converts the Java array into a JSON string using Gson
-   */
-  private String convertToJsonUsingGson(String[] comments) {
-    return new Gson().toJson(comments);
-  }
-
-  /**
    * Converts the messages ArrayList into a JSON string using manual String concatentation.
    */
-  private String convertToJson(String[] comments, String[] emails) {
+  private String convertToJson(List<String> comments, List<String> emails) {
     String json = "{";
     json += "\"comments\": [";
 
-    if (comments.length == 0) {
+    if (comments.size() == 0) {
       json += "]";
     }
 
     // Loop through comments array to create JSON string
-    for (int i = 0; i < comments.length; i++){
-      json += "\"" + comments[i].trim() + "\"";
+    for (int i = 0; i < comments.size(); i++){
+      json += "\"" + comments.get(i).trim() + "\"";
 
       // If currently looking at last (or only item) in list
-      if (i == comments.length - 1) {
+      if (i == comments.size() - 1) {
         json += "]";
       } else {
         json += ", ";
@@ -139,17 +125,17 @@ public class DataServlet extends HttpServlet {
 
     json += ", \"emails\": [";
 
-    if (emails.length == 0) {
+    if (emails.size() == 0) {
       json += "]}";
       return json;
     }
 
     // Loop through the emails array to create JSON string
-    for (int i = 0; i < emails.length; i++) {
-      json += "\"" + emails[i] + "\"";
+    for (int i = 0; i < emails.size(); i++) {
+      json += "\"" + emails.get(i) + "\"";
 
       // if currently looking at last (or only item) in list
-      if (i == emails.length - 1) {
+      if (i == emails.size() - 1) {
         json += "]}";
       } else {
         json += ", ";

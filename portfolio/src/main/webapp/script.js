@@ -109,15 +109,15 @@ const createHrElement = () => {
   return hrElement;
 };
 
+const deleteAllComments = () => {
+  fetch('/delete-data', {method: 'POST'});
+};
+
 /** Creates a <h6> element to identify the user the made the comment */
 const createUserElement = text => {
   const userElement = document.createElement('h6');
   userElement.innerText = 'User: ' + text;
   return userElement;
-};
-
-const deleteAllComments = () => {
-  fetch('/delete-data', {method: 'POST'});
 };
 
 const checkLoginStatus = () => {
