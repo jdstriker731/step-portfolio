@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,10 +33,15 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
+  private static final Gson GSON = new Gson();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     
+    // Maximum number of comments that can be shown on the screen
+    int maxShowableComments = Integer.parseInt(request.getParameter("num-comments").trim());
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
@@ -45,14 +51,21 @@ public class DataServlet extends HttpServlet {
       comments.add(comment);
     }
 
-    // Make sure the comments are trimmed and store in array 
-    String[] usersComments = new String[comments.size()];
-    for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
+    List<String> usersComments = new ArrayList<String>();
+    if (comments.size() <= maxShowableComments) {
+      //  If there are less than [maxShowableComments] comments already stored
+      for (int i = 0; i < comments.size(); i++) {
+        usersComments.add(comments.get(i).trim()); 
+      }
+    } else {
+      // There are more than [maxShowableComments] comments stored already
+      for (int i = 0; i < maxShowableComments; i++) {
+        usersComments.add(comments.get(i).trim());
+      }
     }
 
-    // Turn the comments ArrayList into a JSON string.
-    String json = convertToJsonUsingGson(usersComments);
+    // Turn the userComments ArrayList into a JSON string.
+    String json = GSON.toJson(usersComments);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
@@ -74,12 +87,5 @@ public class DataServlet extends HttpServlet {
 
     // Redirect user back to the comments page.
     response.sendRedirect("/comments.html");
-  }
-
-  /**
-   * Converts the Java array into a JSON string using Gson
-   */
-  private String convertToJsonUsingGson(String[] comments) {
-    return new Gson().toJson(comments);
   }
 }

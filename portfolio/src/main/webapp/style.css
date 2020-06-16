@@ -1,3 +1,9 @@
+body {
+  position: relative;
+  padding-bottom: 58px; 
+  min-height: 100vh;
+}
+
 .content-body {
   display: block;
   margin-left: auto;
@@ -10,7 +16,7 @@
 }
 
 footer {
-  position: fixed;
+  position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -24,7 +30,11 @@ header {
 }
 
 html {
-  background: url("images/blue_background.jpg") no-repeat center center fixed; 
+  background-image:
+    linear-gradient(
+      to right, 
+      #02c8fa, #4053cf
+    );
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

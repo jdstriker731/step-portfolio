@@ -83,15 +83,14 @@ const fetchMessageUsingJSON = () => {
   });
 };
 
-const showUserComments = () => {
-  fetch('/data').then(response => response.json()).then(comments => {
-    // messagesObj is an object, not a string, so we have to
-    // reference its fields to create HTML content
-    
+const showUserComments = commentLimit => {
+  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
+
     // Build the comments setion with all of the user comments, one after the other
+    commentsSection.innerHTML = "";
     for (let i = 0; i < comments.length; i++) {
-       commentsSection.appendChild(createCommentElement(comments[i]));
-       commentsSection.appendChild(createHrElement());
+      commentsSection.appendChild(createCommentElement(comments[i]));
+      commentsSection.appendChild(createHrElement());
     }
   });
 };
@@ -107,4 +106,8 @@ const createCommentElement = text => {
 const createHrElement = () => {
   const hrElement = document.createElement('hr');
   return hrElement;
+};
+
+const deleteAllComments = () => {
+  fetch('/delete-data', {method: 'POST'});
 };
