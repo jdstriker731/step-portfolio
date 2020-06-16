@@ -25,6 +25,8 @@ import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -34,6 +36,8 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+
+  private static final Gson GSON = new Gson();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -54,6 +58,9 @@ public class DataServlet extends HttpServlet {
       emails.add(email);
     }
 
+    // Map to store user emails and comments (to eventually convert to Json object)
+    Map<String, List<String>> emailsAndComments = new HashMap<String, List<String>>();
+
     List<String> userComments = new ArrayList<String>();
     List<String> userEmails = new ArrayList<String>();
     if (comments.size() <= maxShowableComments) {
@@ -70,8 +77,12 @@ public class DataServlet extends HttpServlet {
       }
     }
 
-    // Convert userComments and userEmails to JSON.
-    String json = convertToJson(userComments, userEmails);
+    // Store emails and comments into Map
+    emailsAndComments.put("emails", userEmails);
+    emailsAndComments.put("comments", userComments);
+
+    // Convert comments and emails in Map to Json using Gson
+    String json = GSON.toJson(emailsAndComments);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
@@ -98,49 +109,5 @@ public class DataServlet extends HttpServlet {
 
     // Redirect user back to the comments page.
     response.sendRedirect("/comments.html");
-  }
-
-  /**
-   * Converts the messages ArrayList into a JSON string using manual String concatentation.
-   */
-  private String convertToJson(List<String> comments, List<String> emails) {
-    String json = "{";
-    json += "\"comments\": [";
-
-    if (comments.size() == 0) {
-      json += "]";
-    }
-
-    // Loop through comments array to create JSON string
-    for (int i = 0; i < comments.size(); i++){
-      json += "\"" + comments.get(i).trim() + "\"";
-
-      // If currently looking at last (or only item) in list
-      if (i == comments.size() - 1) {
-        json += "]";
-      } else {
-        json += ", ";
-      }
-    }
-
-    json += ", \"emails\": [";
-
-    if (emails.size() == 0) {
-      json += "]}";
-      return json;
-    }
-
-    // Loop through the emails array to create JSON string
-    for (int i = 0; i < emails.size(); i++) {
-      json += "\"" + emails.get(i) + "\"";
-
-      // if currently looking at last (or only item) in list
-      if (i == emails.size() - 1) {
-        json += "]}";
-      } else {
-        json += ", ";
-      }
-    }
-    return json;
   }
 }

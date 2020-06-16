@@ -88,9 +88,12 @@ const showUserComments = commentLimit => {
 
     // Build the comments setion with all of the user comments, one after the other
     commentsSection.innerHTML = '';
-    for (let i = 0; i < commentsObj.comments.length; i++) {
-      commentsSection.appendChild(createCommentElement(commentsObj.comments[i]));
-      commentsSection.appendChild(createUserElement(commentsObj.emails[i]));
+    const commentsAndEmails = Object.values(commentsObj);
+    const emails = commentsAndEmails[0];
+    const comments = commentsAndEmails[1];
+    for (let i = 0; i < comments.length; i++) {
+      commentsSection.appendChild(createCommentElement(comments[i]));
+      commentsSection.appendChild(createUserElement(emails[i]));
       commentsSection.appendChild(createHrElement());
     }
   });
