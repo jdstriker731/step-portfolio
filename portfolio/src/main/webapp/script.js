@@ -87,7 +87,7 @@ const showUserComments = commentLimit => {
   fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(commentsObj => {
 
     // Build the comments setion with all of the user comments, one after the other
-    commentsSection.innerHTML = "";
+    commentsSection.innerHTML = '';
     for (let i = 0; i < commentsObj.comments.length; i++) {
       commentsSection.appendChild(createCommentElement(commentsObj.comments[i]));
       commentsSection.appendChild(createUserElement(commentsObj.emails[i]));
@@ -122,5 +122,5 @@ const createUserElement = text => {
 
 const checkLoginStatus = () => {
   // Determine Log-in status of user
-  window.location.replace('/login-status');
+  window.location.replace('/authenticate');
 };

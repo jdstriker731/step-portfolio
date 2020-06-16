@@ -34,7 +34,7 @@ public class CommentsLoginServlet extends HttpServlet {
     if (userService.isUserLoggedIn()) {
       response.sendRedirect("/comments.html");
     } else {
-      response.sendRedirect("/login-status");
+      response.sendRedirect("/authenticate");
     }
   }
 }

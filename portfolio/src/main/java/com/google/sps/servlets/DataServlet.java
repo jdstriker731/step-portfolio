@@ -54,24 +54,24 @@ public class DataServlet extends HttpServlet {
       emails.add(email);
     }
 
-    List<String> usersComments = new ArrayList<String>();
-    List<String> usersEmails = new ArrayList<String>();
+    List<String> userComments = new ArrayList<String>();
+    List<String> userEmails = new ArrayList<String>();
     if (comments.size() <= maxShowableComments) {
       //  If there are less than [maxShowableComments] comments already stored
       for (int i = 0; i < comments.size(); i++) {
-        usersComments.add(comments.get(i).trim());
-        usersEmails.add(emails.get(i));
+        userComments.add(comments.get(i).trim());
+        userEmails.add(emails.get(i));
       }
     } else {
       // There are more than [maxShowableComments] comments stored already
       for (int i = 0; i < maxShowableComments; i++) {
-        usersComments.add(comments.get(i).trim());
-        usersEmails.add(emails.get(i));
+        userComments.add(comments.get(i).trim());
+        userEmails.add(emails.get(i));
       }
     }
 
-    // Turn the comments ArrayList into a JSON string.
-    String json = convertToJson(usersComments, usersEmails);
+    // Convert userComments and userEmails to JSON.
+    String json = convertToJson(userComments, userEmails);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
