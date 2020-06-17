@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/see-comments")
 public class CommentsLoginServlet extends HttpServlet {
 
-    @Override
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
 
