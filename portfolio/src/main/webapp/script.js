@@ -166,4 +166,3 @@ function initMaps() {
     title: 'Coney Island'
   });
 }
- 
