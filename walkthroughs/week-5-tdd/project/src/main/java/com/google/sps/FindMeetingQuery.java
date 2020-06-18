@@ -31,9 +31,9 @@ public final class FindMeetingQuery {
     }
 
 
-    /* For each of the requested attendees, loop through all of the events. For each event if that
-       particular required attendee is attending it, add that meeting time slot to the collection
-       of unavailable meeting times
+    /* For each of the requested attendees, loop through all of the events. For each event,
+       If that particular required attendee is attending it, add that meeting time slot to 
+       The collection of unavailable meeting times
     */
     // Iterate over the HashSet of attendees in request.attendees 
     for (String requiredAttendee : request.getAttendees()) {
@@ -54,7 +54,7 @@ public final class FindMeetingQuery {
     Collections.sort(unfixedSortedUnavailableTimes, TimeRange.ORDER_BY_START);
 
 
-    /* Take sorted unavailable TimeRanges and see if any overlap. If they overlap, merge them properly */
+    /* See if there's overlap in the unavailable times and fix them in new array*/
     List<TimeRange> sortedUnavailableTimes = new ArrayList<>();
 
     // 0: last unavailable time in unfixedSortedUnavailableTimes didn't overlap with any before it
@@ -90,7 +90,8 @@ public final class FindMeetingQuery {
           statusFlag = 1;
         
           next--;
-          nextRange = unfixedSortedUnavailableTimes.get(next); // reset back to the most recent range that overlap
+          // reset back to the most recent range that overlap
+          nextRange = unfixedSortedUnavailableTimes.get(next); 
         
           // The current range fully contains the last thing it overlaps with
           if (currRange.contains(nextRange)) {
@@ -104,7 +105,8 @@ public final class FindMeetingQuery {
           }
         } else {
           next--;
-          nextRange = unfixedSortedUnavailableTimes.get(next); // reset back to the most recent range that overlap
+          // reset back to the most recent range that overlap
+          nextRange = unfixedSortedUnavailableTimes.get(next); 
         
           // The current range fully contains the last thing it overlaps with
           if (currRange.contains(nextRange)) {
@@ -140,15 +142,18 @@ public final class FindMeetingQuery {
       // There are times that the required attendees are unavailable; 
       // Find chuncks of time that can fit the requested meeting
 
-      // Check to see if the first unavailable TimeRange is after START_OF_DAY and there's space to fit the requested meeting before then
+      // Check to see if the first unavailable TimeRange is after START_OF_DAY and there's space to 
+      // Fit the requested meeting before then
       TimeRange firstMeeting = sortedUnavailableTimes.get(0);
       
-      if ((TimeRange.START_OF_DAY < firstMeeting.start()) && (request.getDuration() <= (firstMeeting.start() - TimeRange.START_OF_DAY))) {
+      if ((TimeRange.START_OF_DAY < firstMeeting.start()) 
+        && (request.getDuration() <= (firstMeeting.start() - TimeRange.START_OF_DAY))) {
         // Add this time chunk to availableTimes
         availableTimes.add(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, firstMeeting.start(), false));
       }
       
-      // Loop through the list of sorted unavailable TimeRanges to see if the spaces between them can fit the meeting
+      // Loop through the list of sorted unavailable TimeRanges to see if the spaces between them can 
+      // Fit the meeting
       for (int i = 0; i < sortedUnavailableTimes.size(); i++) {
         // If current TimeRange in loop is the last unavailable TimeRange
         if (i == (sortedUnavailableTimes.size() - 1)) {
@@ -160,7 +165,7 @@ public final class FindMeetingQuery {
         // Next TimeRange after the current unavailable TimeRange
         TimeRange nextMeeting = sortedUnavailableTimes.get(i + 1);
         
-        // If there's just enough room to have the requested meeting in between these two, then add it break
+        // If requested meeting just fits in between these two, break after adding to availableTimes
         if (request.getDuration() == (nextMeeting.start() - currentMeeting.end())) {
           availableTimes.add(TimeRange.fromStartEnd(currentMeeting.end(), nextMeeting.start(), false));
           break;
@@ -169,10 +174,12 @@ public final class FindMeetingQuery {
         }
       }
 
-      // Check to see if the last unavailable TimeRange is before END_Of_DAY and there's space to fit the requested meeting after it
+      // Check to see if the last unavailable TimeRange is before END_Of_DAY and there's space to 
+      // Fit the requested meeting after it
       TimeRange lastMeeting = sortedUnavailableTimes.get(sortedUnavailableTimes.size() - 1);
 
-      if ((lastMeeting.end() < TimeRange.END_OF_DAY) && (request.getDuration() <= (TimeRange.END_OF_DAY - lastMeeting.end()))) {
+      if ((lastMeeting.end() < TimeRange.END_OF_DAY) 
+        && (request.getDuration() <= (TimeRange.END_OF_DAY - lastMeeting.end()))) {
         availableTimes.add(TimeRange.fromStartEnd(lastMeeting.end(), TimeRange.END_OF_DAY, true));
       }
     }
