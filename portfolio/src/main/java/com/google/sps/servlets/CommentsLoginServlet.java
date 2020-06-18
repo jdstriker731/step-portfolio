@@ -14,40 +14,27 @@
 
 package com.google.sps.servlets;
 
-import com.google.gson.Gson;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Scanner;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/anime-data")
-public class AnimeDataServlet extends HttpServlet {
-  
-  private HashMap<String, Integer> animeVotes = new HashMap<>();
+@WebServlet("/see-comments")
+public class CommentsLoginServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json");
-    Gson gson = new Gson();
-    String json = gson.toJson(animeVotes);
-    response.getWriter().println(json);
-  }
+    response.setContentType("text/html");
 
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String anime = request.getParameter("anime");
-    int currentAnimeVotes;
-    
-    if (animeVotes.containsKey(anime))
-    {
-        currentAnimeVotes = animeVotes.get(anime);
+    UserService userService = UserServiceFactory.getUserService();
+
+    if (userService.isUserLoggedIn()) {
+      response.sendRedirect("/comments.html");
     } else {
-        currentAnimeVotes = 0;
+      response.sendRedirect("/authenticate");
     }
-    animeVotes.put(anime, currentAnimeVotes + 1);
-    response.sendRedirect("/charts.html");
   }
 }

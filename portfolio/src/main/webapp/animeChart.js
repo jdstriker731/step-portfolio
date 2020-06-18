@@ -15,7 +15,7 @@
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawAnimeChart);
 
-/** Fetches anime choice data and uses to create a chart */
+/** Fetches anime choice data (not stored in Datastore yet) and uses to create a chart */
 function drawAnimeChart() {
   fetch('/anime-data').then(response => response.json()).then(animeVotes => {
     const data = new google.visualization.DataTable();
