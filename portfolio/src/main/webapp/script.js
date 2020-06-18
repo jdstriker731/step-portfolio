@@ -35,7 +35,7 @@ const randomFactGenerator = () => {
 /**
  * Fetches content from the server and adds it to the DOM.
  */
-const getServletContent = () => {
+const fetchContentAndAddToDom = () => {
     console.log('Fetching the content from the server.');
 
     const responsePromise = fetch('/data');
@@ -63,7 +63,7 @@ const addContentToDOM = content => {
   console.log('Adding content to dom: ' + content);
 
   quoteContainer.innerText = content;
-}; 
+};
 
 /** 
  * Prints a random message to the DOM using JSON sent from DataServlet.java.
@@ -77,19 +77,23 @@ const fetchMessageUsingJSON = () => {
     // of messagesObj
     const messagesSize = messagesObj.messages.length;
     const message = messagesObj.messages[Math.floor(Math.random() * messagesSize)];
-    
-    // Add message to the page.
+
+    // Add message to the page
     factContainer.innerText = message;
   });
 };
 
 const showUserComments = commentLimit => {
-  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(comments => {
+  fetch('/data?num-comments=' + commentLimit).then(response => response.json()).then(commentsObj => {
 
     // Build the comments setion with all of the user comments, one after the other
-    commentsSection.innerHTML = "";
+    commentsSection.innerHTML = '';
+    const commentsAndEmails = Object.values(commentsObj);
+    const emails = commentsAndEmails[0];
+    const comments = commentsAndEmails[1];
     for (let i = 0; i < comments.length; i++) {
       commentsSection.appendChild(createCommentElement(comments[i]));
+      commentsSection.appendChild(createUserElement(emails[i]));
       commentsSection.appendChild(createHrElement());
     }
   });
@@ -110,4 +114,16 @@ const createHrElement = () => {
 
 const deleteAllComments = () => {
   fetch('/delete-data', {method: 'POST'});
+};
+
+/** Creates a <h6> element to identify the user the made the comment */
+const createUserElement = text => {
+  const userElement = document.createElement('h6');
+  userElement.innerText = 'User: ' + text;
+  return userElement;
+};
+
+const checkLoginStatus = () => {
+  // Determine Log-in status of user
+  window.location.replace('/authenticate');
 };
