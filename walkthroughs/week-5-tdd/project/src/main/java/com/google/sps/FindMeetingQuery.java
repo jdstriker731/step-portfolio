@@ -21,7 +21,7 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     // The Collection that stores the available times for the requested meeting.
     Collection<TimeRange> availableTimes;
-
+    
     Collection<TimeRange> timesWithOptionals = queryHelper(events, request, true);
     Collection<TimeRange> timesWithoutOptionals = queryHelper(events, request, false);
 
@@ -362,7 +362,7 @@ public final class FindMeetingQuery {
         } 
       }
     }
-
+    
     return availableTimes;
   }
 }
