@@ -20,8 +20,13 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,43 +36,53 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+
+  private static final Gson GSON = new Gson();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Comment").addSort("timestamp", SortDirection.ASCENDING);
     
-    // Hard coded maxuimum number of comments that can be shown on the screen
+    // Maximum number of comments that can be shown on the screen
     int maxShowableComments = Integer.parseInt(request.getParameter("num-comments").trim());
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    ArrayList<String> comments = new ArrayList<String>();
+    List<String> comments = new ArrayList<String>();
+    List<String> emails = new ArrayList<String>();
     for (Entity entity : results.asIterable()) {
       String comment = (String) entity.getProperty("comment-string");
+      String email = (String) entity.getProperty("email");
       comments.add(comment);
+      emails.add(email);
     }
 
-    String[] usersComments;
-    if (comments.size() == 0) {
-      //  If there are zero comments stored
-      usersComments = new String[0];
-    } else if (comments.size() <= maxShowableComments) {
+    // Map to store user emails and comments (to eventually convert to Json object)
+    Map<String, List<String>> emailsAndComments = new HashMap<String, List<String>>();
+
+    List<String> userComments = new ArrayList<String>();
+    List<String> userEmails = new ArrayList<String>();
+    if (comments.size() <= maxShowableComments) {
       //  If there are less than [maxShowableComments] comments already stored
-      usersComments = new String[comments.size()];
-      for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
+      for (int i = 0; i < comments.size(); i++) {
+        userComments.add(comments.get(i).trim());
+        userEmails.add(emails.get(i));
       }
     } else {
       // There are more than [maxShowableComments] comments stored already
-      usersComments = new String[maxShowableComments];  
-      for (int i = 0; i < usersComments.length; i++) {
-        usersComments[i] = comments.get(i).trim();
+      for (int i = 0; i < maxShowableComments; i++) {
+        userComments.add(comments.get(i).trim());
+        userEmails.add(emails.get(i));
       }
     }
 
-    // Turn the comments ArrayList into a JSON string.
-    String json = convertToJsonUsingGson(usersComments);
+    // Store emails and comments into Map
+    emailsAndComments.put("emails", userEmails);
+    emailsAndComments.put("comments", userComments);
+
+    // Convert comments and emails in Map to Json using Gson
+    String json = GSON.toJson(emailsAndComments);
     
     // Send the JSON as the response.
     response.setContentType("application/json;");
@@ -76,12 +91,17 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException { 
+    
+    UserService userService = UserServiceFactory.getUserService();
+
     String userCommentString = request.getParameter("user-comment");
     String trimmmedString = userCommentString.trim();
+    String email = userService.getCurrentUser().getEmail();
     long timestamp = System.currentTimeMillis();
 
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("comment-string", trimmmedString);
+    commentEntity.setProperty("email", email);
     commentEntity.setProperty("timestamp", timestamp);
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -89,12 +109,5 @@ public class DataServlet extends HttpServlet {
 
     // Redirect user back to the comments page.
     response.sendRedirect("/comments.html");
-  }
-
-  /**
-   * Converts the Java array into a JSON string using Gson
-   */
-  private String convertToJsonUsingGson(String[] comments) {
-    return new Gson().toJson(comments);
   }
 }

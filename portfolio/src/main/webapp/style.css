@@ -15,6 +15,16 @@ body {
   margin: 100px;    
 }
 
+#ethnicity-chart {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+#anime-chart {
+  display: inline-block;
+  margin: 0 auto; 
+}
+
 footer {
   position: absolute;
   left: 0;
@@ -45,6 +55,21 @@ img {
   height: 500px;
   width: auto;
   display: inline-block;
+}
+
+#map-cisland {
+  height: 500px;
+  width: 100%;
+}
+
+#map-home {
+  height: 500px;
+  width: 100%;
+}
+
+#map-silliman {
+  height: 500px;
+  width: 100%;
 }
 
 .london-photos {
