@@ -28,11 +28,12 @@ public class AnimeDataServlet extends HttpServlet {
   
   private HashMap<String, Integer> animeVotes = new HashMap<>();
 
+  private static final Gson GSON = new Gson();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    Gson gson = new Gson();
-    String json = gson.toJson(animeVotes);
+    String json = GSON.toJson(animeVotes);
     response.getWriter().println(json);
   }
 
