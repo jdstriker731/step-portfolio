@@ -166,3 +166,8 @@ function initMaps() {
     title: 'Coney Island'
   });
 }
+
+const revealFavAnime = () => {
+  const animeContainer = document.getElementById('fav-anime-container');
+  animeContainer.innerHTML = "My Hero Academia"
+}

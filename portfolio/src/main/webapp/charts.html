@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+    <title>Charts</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <button type="button" onclick="checkLoginStatus()">Login/Logout</button> 
+    <div class="topnav">
+      <a class="active" href="index.html">Home</a>
+      <a href="me.html">About Me</a>
+      <a href="yale.html">Yale</a>
+      <a href="travels.html">Travels</a>
+      <a href="/see-comments">Comments</a>
+      <a href="places.html">Places</a>
+      <a href="charts.html">Charts</a>
+    </div>
+    <header>
+      <h1>Charts</h1>
+    <header>
+    <div class="content-body">
+      <h2>These are some interesting charts about me</h2>
+      
+      <div id="ethnicity-chart"></div>
+      <br>
+      <div id="anime-chart"></div>
+      <form action="/anime-data" method="POST">
+        <select name="anime">
+          <option value="Dragon-Ball-Z">Dragon Ball Z</option>
+          <option value="Black-Clover">Black Clover</option>
+          <option value="My-Hero-Academia">My Hero Academia</option>
+          <option value="Naruto">Naruto</option>
+          <option value="Full-Metal Alchemist">Full Metal Alchemist</option>
+          <option value="Gurren-Lagann">Gurren Lagann</option>
+        </select>
+        <input type="submit" value="submit">
+      </form>
+      <br>
+      <button onclick="revealFavAnime()">My Favorite Anime</button>
+      <h3 id="fav-anime-container"></h3>
+    </div>
+    <footer>
+      <h3>
+          Contact Information: (607) 752-4042    
+          john.dallard@yale.edu    
+          https://www.linkedin.com/in/jonathan-dallard-5b956b196/
+      </h3>
+    </footer>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="ethnicityChart.js"></script>
+    <script src="animeChart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
