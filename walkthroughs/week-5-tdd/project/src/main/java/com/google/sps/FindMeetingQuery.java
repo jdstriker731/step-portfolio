@@ -23,19 +23,14 @@ import java.util.HashSet;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // The Collection that stores the available times for the requested meeting.
-    Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
-
     // Check to see if the duration is longer than a day.
     if (request.getDuration() == TimeRange.WHOLE_DAY.duration() + 1) {
-      return availableTimes;
+      Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
+      return  availableTimes;
     }
     
     List<TimeRange> unavailableTimes = getSortedUnavailableTimes(events, request);
-    availableTimes.addAll(computeAvailableTimes(unavailableTimes, request));
-    
-    return availableTimes;
-    
+    return computeAvailableTimes(unavailableTimes, request);
   }
 
   private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request) {
@@ -43,8 +38,8 @@ public final class FindMeetingQuery {
     Collection<TimeRange> unavailableTimesSet = new HashSet<>();
 
     /* For each of the requested attendees, loop through all of the events. For each event,
-     * If that particular required attendee is attending it, add that meeting time slot to 
-     * The collection of unavailable meeting times. */
+     * if that particular required attendee is attending it, add that meeting time slot to 
+     * the collection of unavailable meeting times. */
 
     // Iterate over the HashSet of attendees in request.attendees. 
     for (String requiredAttendee : request.getAttendees()) {
@@ -106,33 +101,20 @@ public final class FindMeetingQuery {
         // reset back to the most recent range that overlap.
         nextRange = unfixedSortedUnavailableTimes.get(next); 
         
-        // The current range fully contains the last thing it overlaps with.
-        if (currRange.contains(nextRange)) {
-          sortedUnavailableTimes.add(TimeRange.fromStartEnd(currRange.start(), currRange.end(), false));
-          next++;
-          continue;
-        } else {
-          sortedUnavailableTimes.add(TimeRange.fromStartEnd(currRange.start(), nextRange.end(), false));
-          next++;
-          continue;
-        }
+        // Merge the time ranges into one
+        sortedUnavailableTimes.add(TimeRange.mergeTimeRanges(currRange, nextRange));
+        next++;
+        continue;
       } else {
         next--;
         // reset back to the most recent range that overlap.
         nextRange = unfixedSortedUnavailableTimes.get(next); 
         
-        // The current range fully contains the last thing it overlaps with.
-        if (currRange.contains(nextRange)) {
-          sortedUnavailableTimes.add(TimeRange.fromStartEnd(currRange.start(), currRange.end(), false));
-          curr = next + 1;
-          next = curr + 1;
-          continue;
-        } else {
-          sortedUnavailableTimes.add(TimeRange.fromStartEnd(currRange.start(), nextRange.end(), false));
-          curr = next + 1;
-          next = curr + 1;
-          continue;
-        }  
+        // Merge the time ranges into one
+        sortedUnavailableTimes.add(TimeRange.mergeTimeRanges(currRange, nextRange));
+        curr = next + 1;
+        next = curr + 1;
+        continue;  
       }   
     }
 
