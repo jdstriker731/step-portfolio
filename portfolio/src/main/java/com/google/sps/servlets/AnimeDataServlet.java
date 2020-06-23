@@ -25,9 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/anime-data")
 public class AnimeDataServlet extends HttpServlet {
-  
   private HashMap<String, Integer> animeVotes = new HashMap<>();
-
   private static final Gson GSON = new Gson();
 
   @Override
