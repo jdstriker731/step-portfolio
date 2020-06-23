@@ -183,8 +183,4 @@ public final class TimeRange {
   public static TimeRange fromStartDuration(int start, int duration) {
     return new TimeRange(start, duration);
   }
-
-  public static TimeRange mergeTimeRanges(TimeRange first, TimeRange second) {
-    return first.contains(second) ? TimeRange.fromStartEnd(first.start(), first.end(), false) : TimeRange.fromStartEnd(first.start(), second.end(), false);
-  }
 }

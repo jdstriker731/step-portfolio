@@ -25,8 +25,7 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     // Check to see if the duration is longer than a day.
     if (request.getDuration() == TimeRange.WHOLE_DAY.duration() + 1) {
-      Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
-      return  availableTimes;
+      return new ArrayList<TimeRange>();
     }
     
     List<TimeRange> unavailableTimes = getSortedUnavailableTimes(events, request);
@@ -102,7 +101,7 @@ public final class FindMeetingQuery {
         nextRange = unfixedSortedUnavailableTimes.get(next); 
         
         // Merge the time ranges into one
-        sortedUnavailableTimes.add(TimeRange.mergeTimeRanges(currRange, nextRange));
+        sortedUnavailableTimes.add(mergeOverlappingTimeRanges(currRange, nextRange));
         next++;
         continue;
       } else {
@@ -111,7 +110,7 @@ public final class FindMeetingQuery {
         nextRange = unfixedSortedUnavailableTimes.get(next); 
         
         // Merge the time ranges into one
-        sortedUnavailableTimes.add(TimeRange.mergeTimeRanges(currRange, nextRange));
+        sortedUnavailableTimes.add(mergeOverlappingTimeRanges(currRange, nextRange));
         curr = next + 1;
         next = curr + 1;
         continue;  
@@ -184,5 +183,15 @@ public final class FindMeetingQuery {
     }
 
     return availableTimes;
+  }
+
+  /**
+   * This helper function takes two TimeRanges that are know to overlap, with first having a start time that comes 
+   * before second. If first completely contains second, then first is returned. Otherwise, first and second overlap
+   * but first does not contain second. In this case, a new TimeRange is returned that begins when first starts
+   * and ends when second ends
+   */
+  private TimeRange mergeOverlappingTimeRanges(TimeRange first, TimeRange second) {
+    return first.contains(second) ? first: TimeRange.fromStartEnd(first.start(), second.end(), false);
   }
 }
