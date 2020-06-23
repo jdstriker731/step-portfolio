@@ -22,15 +22,19 @@ import java.util.Set;
 import java.util.HashSet;
 
 public final class FindMeetingQuery {
+  /**
+   * This function takes two inputs, a MeetingRequest and Collection contain various events and returns
+   * a Collection of TimeRanges--starting from the earliest time in the day to the latest--when this meeting
+   * can occur. If there are openings for the optional attendees to attend along with the required attendees, 
+   * then that Collection of TimeRanges are returned, otherwise the openings for the openings for just the 
+   * required are returned.
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     // Check to see if the duration is longer than a day.
     if (request.getDuration() == TimeRange.WHOLE_DAY.duration() + 1) {
       return new ArrayList<TimeRange>();
     }
     
-    // The Collection that stores the available times for the requested meeting.
-    Collection<TimeRange> availableTimes;
-
     List<TimeRange> unavailableTimesWithOptionals = getSortedUnavailableTimes(events, request, true);
     Collection<TimeRange> timesWithOptionals = computeAvailableTimes(unavailableTimesWithOptionals, request);
 
@@ -38,14 +42,14 @@ public final class FindMeetingQuery {
     Collection<TimeRange> timesWithoutOptionals = computeAvailableTimes(unavailableTimesWithoutOptionals, request);
 
     if (timesWithOptionals.isEmpty() && (request.getAttendees().size() == 0)) {
-      availableTimes = timesWithOptionals;
-    } else if (timesWithOptionals.isEmpty() && (request.getAttendees().size() != 0)) {
-      availableTimes = timesWithoutOptionals;
-    } else {
-      availableTimes = timesWithOptionals;
+      return timesWithOptionals;
     }
 
-    return availableTimes;
+    if (timesWithOptionals.isEmpty() && (request.getAttendees().size() != 0)) {
+      return timesWithoutOptionals;
+    }
+
+    return timesWithOptionals;
   }
 
   private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request, boolean includeOptionals) {
@@ -67,7 +71,7 @@ public final class FindMeetingQuery {
       }
     } 
 
-    if (includeOptionals == true) {
+    if (includeOptionals) {
       // Iterate over the HashSet of optional attendees as well
       for (String optionalAttendee : request.getOptionalAttendees()) {
         // Loop through all of the events in the same way as before
