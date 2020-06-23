@@ -220,7 +220,7 @@ public final class FindMeetingQuery {
    * but first does not contain second. In this case, a new TimeRange is returned that begins when first starts
    * and ends when second ends
    */
-  private TimeRange mergeOverlappingTimeRanges(TimeRange first, TimeRange second) {
+  private static TimeRange mergeOverlappingTimeRanges(TimeRange first, TimeRange second) {
     return first.contains(second) ? first: TimeRange.fromStartEnd(first.start(), second.end(), false);
   }
 }
