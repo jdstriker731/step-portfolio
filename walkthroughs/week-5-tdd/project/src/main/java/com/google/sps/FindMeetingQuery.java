@@ -28,11 +28,27 @@ public final class FindMeetingQuery {
       return new ArrayList<TimeRange>();
     }
     
-    List<TimeRange> unavailableTimes = getSortedUnavailableTimes(events, request);
-    return computeAvailableTimes(unavailableTimes, request);
+    // The Collection that stores the available times for the requested meeting.
+    Collection<TimeRange> availableTimes;
+
+    List<TimeRange> unavailableTimesWithOptionals = getSortedUnavailableTimes(events, request, true);
+    Collection<TimeRange> timesWithOptionals = computeAvailableTimes(unavailableTimesWithOptionals, request);
+
+    List<TimeRange> unavailableTimesWithoutOptionals = getSortedUnavailableTimes(events, request, false);
+    Collection<TimeRange> timesWithoutOptionals = computeAvailableTimes(unavailableTimesWithoutOptionals, request);
+
+    if (timesWithOptionals.isEmpty() && (request.getAttendees().size() == 0)) {
+      availableTimes = timesWithOptionals;
+    } else if (timesWithOptionals.isEmpty() && (request.getAttendees().size() != 0)) {
+      availableTimes = timesWithoutOptionals;
+    } else {
+      availableTimes = timesWithOptionals;
+    }
+
+    return availableTimes;
   }
 
-  private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request) {
+  private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request, boolean includeOptionals) {
 	// Some type of collection to store all of the (unsorted) unavailable meeting times. 
     Collection<TimeRange> unavailableTimesSet = new HashSet<>();
 
@@ -50,6 +66,19 @@ public final class FindMeetingQuery {
         }
       }
     } 
+
+    if (includeOptionals == true) {
+      // Iterate over the HashSet of optional attendees as well
+      for (String optionalAttendee : request.getOptionalAttendees()) {
+        // Loop through all of the events in the same way as before
+        for (Event currEvent : events) {
+          // Check to see if optionalAttendee is among the attendees for this event
+          if (currEvent.getAttendees().contains(optionalAttendee)) {
+            unavailableTimesSet.add(currEvent.getWhen());
+          }
+        } 
+      }
+    }
 
     /* Sort all the unavailabe meeting times (i.e TimeRanges) in order of start time
      * (earliest start time first). */
