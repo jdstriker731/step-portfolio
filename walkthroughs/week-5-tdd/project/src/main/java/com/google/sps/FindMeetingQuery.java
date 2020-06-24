@@ -22,17 +22,35 @@ import java.util.Set;
 import java.util.HashSet;
 
 public final class FindMeetingQuery {
+  /**
+   * This function takes two inputs, a MeetingRequest and Collection contain various events and returns
+   * a Collection of TimeRanges--starting from the earliest time in the day to the latest--when this meeting
+   * can occur. If there are openings for the optional attendees to attend along with the required attendees, 
+   * then that Collection of TimeRanges are returned, otherwise the openings for the openings for just the 
+   * required are returned.
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     // Check to see if the duration is longer than a day.
     if (request.getDuration() == TimeRange.WHOLE_DAY.duration() + 1) {
       return new ArrayList<TimeRange>();
     }
     
-    List<TimeRange> unavailableTimes = getSortedUnavailableTimes(events, request);
-    return computeAvailableTimes(unavailableTimes, request);
-  }
+    List<TimeRange> unavailableTimesWithOptionals = getSortedUnavailableTimes(events, request, true);
+    Collection<TimeRange> timesWithOptionals = computeAvailableTimes(unavailableTimesWithOptionals, request);
 
-  private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request) {
+    List<TimeRange> unavailableTimesWithoutOptionals = getSortedUnavailableTimes(events, request, false);
+    Collection<TimeRange> timesWithoutOptionals = computeAvailableTimes(unavailableTimesWithoutOptionals, request);
+
+    if (request.getAttendees().isEmpty()) {
+      return timesWithOptionals;
+    }
+    if (!timesWithOptionals.isEmpty()) {
+      return timesWithOptionals;
+    }
+    return timesWithoutOptionals;
+}
+
+  private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request, boolean includeOptionals) {
 	// Some type of collection to store all of the (unsorted) unavailable meeting times. 
     Collection<TimeRange> unavailableTimesSet = new HashSet<>();
 
@@ -50,6 +68,19 @@ public final class FindMeetingQuery {
         }
       }
     } 
+
+    if (includeOptionals) {
+      // Iterate over the HashSet of optional attendees as well
+      for (String optionalAttendee : request.getOptionalAttendees()) {
+        // Loop through all of the events in the same way as before
+        for (Event currEvent : events) {
+          // Check to see if optionalAttendee is among the attendees for this event
+          if (currEvent.getAttendees().contains(optionalAttendee)) {
+            unavailableTimesSet.add(currEvent.getWhen());
+          }
+        } 
+      }
+    }
 
     /* Sort all the unavailabe meeting times (i.e TimeRanges) in order of start time
      * (earliest start time first). */
@@ -191,7 +222,7 @@ public final class FindMeetingQuery {
    * but first does not contain second. In this case, a new TimeRange is returned that begins when first starts
    * and ends when second ends
    */
-  private TimeRange mergeOverlappingTimeRanges(TimeRange first, TimeRange second) {
+  private static TimeRange mergeOverlappingTimeRanges(TimeRange first, TimeRange second) {
     return first.contains(second) ? first: TimeRange.fromStartEnd(first.start(), second.end(), false);
   }
 }
