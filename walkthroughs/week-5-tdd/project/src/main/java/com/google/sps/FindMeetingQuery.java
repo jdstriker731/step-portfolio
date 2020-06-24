@@ -41,16 +41,14 @@ public final class FindMeetingQuery {
     List<TimeRange> unavailableTimesWithoutOptionals = getSortedUnavailableTimes(events, request, false);
     Collection<TimeRange> timesWithoutOptionals = computeAvailableTimes(unavailableTimesWithoutOptionals, request);
 
-    if (timesWithOptionals.isEmpty() && (request.getAttendees().size() == 0)) {
+    if (request.getAttendees().isEmpty()) {
       return timesWithOptionals;
     }
-
-    if (timesWithOptionals.isEmpty() && (request.getAttendees().size() != 0)) {
-      return timesWithoutOptionals;
+    if (!timesWithOptionals.isEmpty()) {
+      return timesWithOptionals;
     }
-
-    return timesWithOptionals;
-  }
+    return timesWithoutOptionals;
+}
 
   private List<TimeRange> getSortedUnavailableTimes(Collection<Event> events, MeetingRequest request, boolean includeOptionals) {
 	// Some type of collection to store all of the (unsorted) unavailable meeting times. 
